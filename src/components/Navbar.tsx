@@ -18,36 +18,37 @@ export default function Navbar() {
 
   return (
     <nav className="bg-dark sticky top-0 z-50 shadow-lg">
-      <div className="mx-auto px-4 sm:px-8 lg:px-16">
-        <div className="flex h-20 sm:h-28 lg:h-48 items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 sm:gap-5 lg:gap-8 shrink-0">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 sm:h-20 items-center justify-between">
+          {/* Logo + Name */}
+          <Link href="/" className="flex items-center gap-3 shrink-0">
             <Image
               src="/logo.png"
               alt="Hayward Tire"
-              width={160}
-              height={160}
-              className="rounded h-12 w-12 sm:h-20 sm:w-20 lg:h-[160px] lg:w-[160px] object-contain"
+              width={100}
+              height={100}
+              className="rounded h-10 w-10 sm:h-14 sm:w-14 object-contain"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = "none";
               }}
             />
             <div className="flex flex-col">
-              <span className="text-base sm:text-2xl lg:text-4xl font-bold text-white tracking-wide">
+              <span className="text-lg sm:text-xl font-bold text-white tracking-wide leading-tight">
                 HAYWARD TIRE
               </span>
-              <span className="text-[10px] sm:text-xs lg:text-base text-accent tracking-widest uppercase hidden sm:block">
+              <span className="text-[9px] sm:text-[11px] text-accent tracking-widest uppercase leading-tight">
                 Quality Service Since Day One
               </span>
             </div>
           </Link>
 
           {/* Desktop links */}
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden md:flex items-center gap-1 lg:gap-2">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`px-8 py-4 rounded-lg text-lg font-semibold transition-colors ${
+                className={`px-4 py-2 rounded-md text-sm font-semibold transition-colors ${
                   pathname === link.href
                     ? "bg-primary text-white"
                     : "text-gray-300 hover:text-white hover:bg-dark-light"
@@ -58,10 +59,10 @@ export default function Navbar() {
             ))}
             <a
               href="tel:+15104701162"
-              className="ml-8 flex items-center gap-3 rounded-full bg-primary px-12 py-4 text-lg font-bold text-white transition-colors hover:bg-primary-dark"
+              className="ml-3 flex items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-primary-dark"
             >
               <svg
-                className="h-6 w-6"
+                className="h-4 w-4"
                 fill="none"
                 viewBox="0 0 24 24"
                 strokeWidth={2}
@@ -80,11 +81,11 @@ export default function Navbar() {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="lg:hidden rounded-md p-2 text-gray-300 hover:text-white"
+            className="md:hidden rounded-md p-2 text-gray-300 hover:text-white"
             aria-label="Toggle menu"
           >
             <svg
-              className="h-7 w-7 sm:h-9 sm:w-9"
+              className="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2}
@@ -110,13 +111,13 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-dark-light bg-dark pb-4">
+        <div className="md:hidden border-t border-dark-light bg-dark pb-4">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setMobileOpen(false)}
-              className={`block px-6 py-4 text-base font-semibold transition-colors ${
+              className={`block px-6 py-3.5 text-base font-semibold transition-colors ${
                 pathname === link.href
                   ? "bg-primary text-white"
                   : "text-gray-300 hover:text-white hover:bg-dark-light"
@@ -127,10 +128,10 @@ export default function Navbar() {
           ))}
           <a
             href="tel:+15104701162"
-            className="mx-4 mt-3 flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 text-base font-bold text-white"
+            className="mx-4 mt-3 flex items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-bold text-white"
           >
             <svg
-              className="h-5 w-5"
+              className="h-4 w-4"
               fill="none"
               viewBox="0 0 24 24"
               strokeWidth={2}
