@@ -121,14 +121,14 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative bg-dark overflow-hidden" aria-label="Hayward Tire hero">
         <div className="absolute inset-0 bg-linear-to-br from-dark via-dark-light to-dark opacity-90" />
-        <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
+        <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:py-32 lg:px-8">
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
             <div>
               <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-6">
                 <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
                 Open Tue–Sat 9AM–6PM, Sun 11AM–4PM
               </div>
-              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
+              <h1 className="text-3xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Your Trusted
                 <span className="text-primary"> Tire Shop</span>
                 <br />
@@ -176,9 +176,9 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section className="bg-white py-20" aria-label="Tire and auto services in Hayward">
+      <section className="bg-white py-12 sm:py-20" aria-label="Tire and auto services in Hayward">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
+          <div className="text-center mb-8 sm:mb-14">
             <h2 className="text-3xl font-bold text-dark sm:text-4xl">
               Tire &amp; Auto Services in Hayward, CA
             </h2>
@@ -249,15 +249,15 @@ export default function Home() {
       </section>
 
       {/* Reviews Section */}
-      <section className="bg-[#F9FAFB] py-20" aria-label="Customer reviews for Hayward Tire">
+      <section className="bg-[#F9FAFB] py-12 sm:py-20" aria-label="Customer reviews for Hayward Tire">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
+          <div className="text-center mb-8 sm:mb-14">
             <h2 className="text-3xl font-bold text-dark sm:text-4xl">
               What Our Hayward Customers Say
             </h2>
-            <div className="mt-3 flex items-center justify-center gap-2">
+            <div className="mt-3 flex flex-col sm:flex-row items-center justify-center gap-2">
               <StarRating rating={5} />
-              <span className="text-lg text-gray-500">
+              <span className="text-sm sm:text-lg text-gray-500">
                 4.7 / 5 based on customer reviews
               </span>
             </div>
@@ -266,7 +266,7 @@ export default function Home() {
             {reviews.slice(0, 3).map((review, idx) => (
               <article
                 key={idx}
-                className="rounded-2xl bg-white p-8 shadow-sm border border-gray-100"
+                className="rounded-2xl bg-white p-5 sm:p-8 shadow-sm border border-gray-100"
                 itemScope
                 itemType="https://schema.org/Review"
               >
@@ -275,7 +275,7 @@ export default function Home() {
                   &ldquo;{review.text}&rdquo;
                 </p>
                 <div className="mt-6 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white">
                     {review.name[0]}
                   </div>
                   <div>
@@ -286,11 +286,11 @@ export default function Home() {
               </article>
             ))}
           </div>
-          <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div className="mt-6 sm:mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
             {reviews.slice(3).map((review, idx) => (
               <article
                 key={idx}
-                className="rounded-2xl bg-white p-8 shadow-sm border border-gray-100"
+                className="rounded-2xl bg-white p-5 sm:p-8 shadow-sm border border-gray-100"
                 itemScope
                 itemType="https://schema.org/Review"
               >
@@ -314,9 +314,9 @@ export default function Home() {
       </section>
 
       {/* About / Welcome Section */}
-      <section className="bg-white py-20" aria-label="About Hayward Tire">
+      <section className="bg-white py-12 sm:py-20" aria-label="About Hayward Tire">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-2">
+          <div className="grid grid-cols-1 items-start gap-8 sm:gap-16 lg:grid-cols-2">
             <div>
               <h2 className="text-3xl font-bold text-dark sm:text-4xl">
                 Welcome to Hayward Tire
@@ -354,7 +354,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="relative overflow-hidden rounded-2xl shadow-xl h-[500px]">
+            <div className="relative overflow-hidden rounded-2xl shadow-xl h-[280px] sm:h-[400px] lg:h-[500px]">
               <Image
                 src="/tire.png"
                 alt="Custom wheels and tires at Hayward Tire shop in Hayward, CA"

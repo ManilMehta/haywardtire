@@ -20,9 +20,9 @@ export default function ContactPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-dark py-16">
+      <section className="bg-dark py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold text-white sm:text-5xl">
+          <h1 className="text-3xl font-bold text-white sm:text-5xl">
             Contact <span className="text-primary">Hayward Tire</span>
           </h1>
           <p className="mt-4 text-lg text-gray-400 max-w-2xl mx-auto">

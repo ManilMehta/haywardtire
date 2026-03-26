@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className="bg-dark text-gray-300" role="contentinfo">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {/* Business Info */}
           <div itemScope itemType="https://schema.org/TireShop">
             <h3 className="text-lg font-bold text-white mb-4" itemProp="name">

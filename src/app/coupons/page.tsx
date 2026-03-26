@@ -121,9 +121,9 @@ export default function CouponsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-dark py-16">
+      <section className="bg-dark py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-4xl font-bold text-white sm:text-5xl">
+          <h1 className="text-3xl font-bold text-white sm:text-5xl">
             Tire Coupons &amp; <span className="text-accent">Deals in Hayward</span>
           </h1>
           <p className="mt-4 text-lg text-gray-400 max-w-2xl mx-auto">
@@ -163,8 +163,8 @@ export default function CouponsPage() {
 
           {/* Admin Login Modal */}
           {showAdminLogin && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-              <div className="w-full max-w-sm rounded-2xl bg-white p-8 shadow-xl">
+            <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4">
+              <div className="w-full max-w-sm rounded-t-2xl sm:rounded-2xl bg-white p-6 sm:p-8 shadow-xl">
                 <h3 className="text-xl font-bold text-dark mb-4">
                   Admin Login
                 </h3>
@@ -212,8 +212,8 @@ export default function CouponsPage() {
 
           {/* Editing Modal */}
           {editingCoupon && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-              <div className="w-full max-w-lg rounded-2xl bg-white p-8 shadow-xl">
+            <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 p-0 sm:p-4">
+              <div className="w-full max-w-lg rounded-t-2xl sm:rounded-2xl bg-white p-6 sm:p-8 shadow-xl max-h-[90vh] overflow-y-auto">
                 <h3 className="text-xl font-bold text-dark mb-6">
                   {coupons.find((c) => c.id === editingCoupon.id)
                     ? "Edit Coupon"
@@ -343,7 +343,7 @@ export default function CouponsPage() {
               {coupons.map((coupon) => (
                 <article
                   key={coupon.id}
-                  className="relative overflow-hidden rounded-2xl border-2 border-dashed border-primary/30 bg-linear-to-br from-white to-red-50 p-8 transition-all hover:border-primary hover:shadow-lg"
+                  className="relative overflow-hidden rounded-2xl border-2 border-dashed border-primary/30 bg-linear-to-br from-white to-red-50 p-5 sm:p-8 transition-all hover:border-primary hover:shadow-lg"
                   itemScope
                   itemType="https://schema.org/Offer"
                 >
