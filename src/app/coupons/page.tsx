@@ -1,117 +1,136 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface Coupon {
   id: string;
   title: string;
   description: string;
   discount: string;
-  validUntil: string;
+  valid_until: string;
   code: string;
 }
 
-const defaultCoupons: Coupon[] = [
-  {
-    id: "1",
-    title: "New Tire Special",
-    description: "Save on a set of 4 new tires. Any brand, any size.",
-    discount: "$50 OFF",
-    validUntil: "2026-06-30",
-    code: "TIRES50",
-  },
-  {
-    id: "2",
-    title: "Brake Service Deal",
-    description: "Complete brake pad replacement for front or rear axle.",
-    discount: "$25 OFF",
-    validUntil: "2026-06-30",
-    code: "BRAKES25",
-  },
-  {
-    id: "3",
-    title: "Free Flat Repair",
-    description: "Complimentary tire puncture repair on your first visit.",
-    discount: "FREE",
-    validUntil: "2026-06-30",
-    code: "FLATFREE",
-  },
-];
-
-const STORAGE_KEY = "haywardtire_coupons";
-const ADMIN_PASSWORD = "hayward2024";
-
 export default function CouponsPage() {
-  const [coupons, setCoupons] = useState<Coupon[]>(defaultCoupons);
+  const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [showAdminLogin, setShowAdminLogin] = useState(false);
   const [password, setPassword] = useState("");
   const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null);
   const [passwordError, setPasswordError] = useState(false);
+  const [saving, setSaving] = useState(false);
 
-  useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) {
-      try {
-        setCoupons(JSON.parse(stored));
-      } catch {
-        setCoupons(defaultCoupons);
+  const adminPassword = () => sessionStorage.getItem("haywardtire_admin_pw") || "";
+
+  const fetchCoupons = useCallback(async () => {
+    try {
+      const res = await fetch("/api/coupons");
+      if (res.ok) {
+        const data = await res.json();
+        setCoupons(
+          data.map((c: Record<string, string>) => ({
+            id: c.id,
+            title: c.title,
+            description: c.description,
+            discount: c.discount,
+            valid_until: c.valid_until,
+            code: c.code,
+          }))
+        );
       }
+    } catch {
+      /* network error — keep existing state */
+    } finally {
+      setLoading(false);
     }
-    const adminFlag = sessionStorage.getItem("haywardtire_admin");
-    if (adminFlag === "true") setIsAdmin(true);
   }, []);
 
-  function saveCoupons(updated: Coupon[]) {
-    setCoupons(updated);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-  }
+  useEffect(() => {
+    fetchCoupons();
+    const pw = sessionStorage.getItem("haywardtire_admin_pw");
+    if (pw) setIsAdmin(true);
+  }, [fetchCoupons]);
 
-  function handleAdminLogin() {
-    if (password === ADMIN_PASSWORD) {
-      setIsAdmin(true);
-      sessionStorage.setItem("haywardtire_admin", "true");
-      setShowAdminLogin(false);
-      setPassword("");
-      setPasswordError(false);
-    } else {
+  async function handleAdminLogin() {
+    try {
+      const res = await fetch("/api/coupons/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-password": password,
+        },
+      });
+      if (res.ok) {
+        setIsAdmin(true);
+        sessionStorage.setItem("haywardtire_admin_pw", password);
+        setShowAdminLogin(false);
+        setPassword("");
+        setPasswordError(false);
+      } else {
+        setPasswordError(true);
+      }
+    } catch {
       setPasswordError(true);
     }
   }
 
   function handleAdminLogout() {
     setIsAdmin(false);
-    sessionStorage.removeItem("haywardtire_admin");
+    sessionStorage.removeItem("haywardtire_admin_pw");
   }
 
-  function handleSaveCoupon() {
+  async function handleSaveCoupon() {
     if (!editingCoupon) return;
-    const updated = coupons.map((c) =>
-      c.id === editingCoupon.id ? editingCoupon : c
-    );
+    setSaving(true);
+
     const isNew = !coupons.find((c) => c.id === editingCoupon.id);
-    if (isNew) {
-      if (coupons.length >= 3) {
-        updated.shift();
+    const method = isNew ? "POST" : "PUT";
+
+    try {
+      const res = await fetch("/api/coupons", {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-password": adminPassword(),
+        },
+        body: JSON.stringify({
+          id: editingCoupon.id,
+          title: editingCoupon.title,
+          description: editingCoupon.description,
+          discount: editingCoupon.discount,
+          validUntil: editingCoupon.valid_until,
+          code: editingCoupon.code,
+        }),
+      });
+      if (res.ok) {
+        await fetchCoupons();
+        setEditingCoupon(null);
       }
-      updated.push(editingCoupon);
+    } finally {
+      setSaving(false);
     }
-    saveCoupons(updated);
-    setEditingCoupon(null);
   }
 
-  function handleDeleteCoupon(id: string) {
-    const updated = coupons.filter((c) => c.id !== id);
-    saveCoupons(updated);
+  async function handleDeleteCoupon(id: string) {
+    await fetch("/api/coupons", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "x-admin-password": adminPassword(),
+      },
+      body: JSON.stringify({ id }),
+    });
+    await fetchCoupons();
   }
 
   function handleAddNew() {
     setEditingCoupon({
-      id: Date.now().toString(),
+      id: "",
       title: "",
       description: "",
       discount: "",
-      validUntil: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
+      valid_until: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
         .toISOString()
         .split("T")[0],
       code: "",
@@ -295,11 +314,11 @@ export default function CouponsPage() {
                       </label>
                       <input
                         type="date"
-                        value={editingCoupon.validUntil}
+                        value={editingCoupon.valid_until}
                         onChange={(e) =>
                           setEditingCoupon({
                             ...editingCoupon,
-                            validUntil: e.target.value,
+                            valid_until: e.target.value,
                           })
                         }
                         className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
@@ -311,13 +330,14 @@ export default function CouponsPage() {
                   <button
                     onClick={handleSaveCoupon}
                     disabled={
+                      saving ||
                       !editingCoupon.title ||
                       !editingCoupon.discount ||
                       !editingCoupon.code
                     }
                     className="flex-1 rounded-lg bg-primary px-4 py-2.5 text-sm font-bold text-white hover:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Save Coupon
+                    {saving ? "Saving..." : "Save Coupon"}
                   </button>
                   <button
                     onClick={() => setEditingCoupon(null)}
@@ -331,7 +351,12 @@ export default function CouponsPage() {
           )}
 
           {/* Coupon Cards */}
-          {coupons.length === 0 ? (
+          {loading ? (
+            <div className="text-center py-16">
+              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+              <p className="mt-4 text-gray-500">Loading coupons...</p>
+            </div>
+          ) : coupons.length === 0 ? (
             <div className="text-center py-16">
               <p className="text-gray-500 text-lg">
                 No active coupons right now. Check back soon for tire deals and
@@ -365,8 +390,8 @@ export default function CouponsPage() {
                     </div>
                     <p className="mt-3 text-xs text-gray-400">
                       Valid until{" "}
-                      <time dateTime={coupon.validUntil} itemProp="validThrough">
-                        {new Date(coupon.validUntil + "T00:00:00").toLocaleDateString("en-US", {
+                      <time dateTime={coupon.valid_until} itemProp="validThrough">
+                        {new Date(coupon.valid_until + "T00:00:00").toLocaleDateString("en-US", {
                           month: "long",
                           day: "numeric",
                           year: "numeric",
