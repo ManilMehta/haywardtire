@@ -13,6 +13,11 @@ export default function ContactPage() {
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
+    if (typeof window !== "undefined" && typeof window.gtag === "function") {
+      window.gtag("event", "conversion", {
+        send_to: "AW-17586664860/LBd7CIS5zJkcEJzr_MFB",
+      });
+    }
     setSubmitted(true);
     setFormState({ name: "", email: "", phone: "", message: "" });
   }
