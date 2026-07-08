@@ -28,11 +28,27 @@ export async function GET() {
   return NextResponse.json(data);
 }
 
+function configError() {
+  return NextResponse.json(
+    {
+      error:
+        "Server is missing the SUPABASE_SERVICE_ROLE_KEY environment variable. Add it to your hosting environment and redeploy.",
+    },
+    { status: 500 }
+  );
+}
+
 export async function POST(req: NextRequest) {
   if (!checkAdmin(req)) return unauthorized();
 
   const body = await req.json();
-  const serviceClient = getServiceClient();
+
+  let serviceClient;
+  try {
+    serviceClient = getServiceClient();
+  } catch {
+    return configError();
+  }
 
   const { data, error } = await serviceClient
     .from("coupons")
@@ -57,7 +73,13 @@ export async function PUT(req: NextRequest) {
   if (!checkAdmin(req)) return unauthorized();
 
   const body = await req.json();
-  const serviceClient = getServiceClient();
+
+  let serviceClient;
+  try {
+    serviceClient = getServiceClient();
+  } catch {
+    return configError();
+  }
 
   const { data, error } = await serviceClient
     .from("coupons")
@@ -83,7 +105,13 @@ export async function DELETE(req: NextRequest) {
   if (!checkAdmin(req)) return unauthorized();
 
   const { id } = await req.json();
-  const serviceClient = getServiceClient();
+
+  let serviceClient;
+  try {
+    serviceClient = getServiceClient();
+  } catch {
+    return configError();
+  }
 
   const { error } = await serviceClient
     .from("coupons")

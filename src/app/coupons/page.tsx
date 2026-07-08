@@ -20,6 +20,7 @@ export default function CouponsPage() {
   const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null);
   const [passwordError, setPasswordError] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   const adminPassword = () => sessionStorage.getItem("haywardtire_admin_pw") || "";
 
@@ -83,6 +84,7 @@ export default function CouponsPage() {
   async function handleSaveCoupon() {
     if (!editingCoupon) return;
     setSaving(true);
+    setSaveError(null);
 
     const isNew = !coupons.find((c) => c.id === editingCoupon.id);
     const method = isNew ? "POST" : "PUT";
@@ -106,7 +108,22 @@ export default function CouponsPage() {
       if (res.ok) {
         await fetchCoupons();
         setEditingCoupon(null);
+      } else if (res.status === 401) {
+        setSaveError(
+          "Your admin session expired. Please log out and log back in."
+        );
+      } else {
+        let message = `Save failed (error ${res.status}).`;
+        try {
+          const data = await res.json();
+          if (data?.error) message = data.error;
+        } catch {
+          /* response had no JSON body */
+        }
+        setSaveError(message);
       }
+    } catch {
+      setSaveError("Network error — please check your connection and try again.");
     } finally {
       setSaving(false);
     }
@@ -326,6 +343,11 @@ export default function CouponsPage() {
                     </div>
                   </div>
                 </div>
+                {saveError && (
+                  <p className="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">
+                    {saveError}
+                  </p>
+                )}
                 <div className="mt-6 flex gap-3">
                   <button
                     onClick={handleSaveCoupon}
@@ -340,7 +362,10 @@ export default function CouponsPage() {
                     {saving ? "Saving..." : "Save Coupon"}
                   </button>
                   <button
-                    onClick={() => setEditingCoupon(null)}
+                    onClick={() => {
+                      setEditingCoupon(null);
+                      setSaveError(null);
+                    }}
                     className="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
                   >
                     Cancel
