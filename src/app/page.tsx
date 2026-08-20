@@ -126,7 +126,7 @@ export default function Home() {
             <div>
               <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary mb-6">
                 <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-                Open Tue–Sat 9AM–6PM, Sun 11AM–4PM
+                Open Mon–Sat 9AM–6PM, Sun 11AM–4PM
               </div>
               <h1 className="text-3xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
                 Your Trusted
@@ -228,9 +228,9 @@ export default function Home() {
               </svg>
               <h3 className="text-xl font-bold">Hours</h3>
               <p className="mt-1 text-white/80">
-                Tue–Sat: 9:00 AM – 6:00 PM
+                Mon–Sat: 9:00 AM – 6:00 PM
                 <br />
-                Sun: 11:00 AM – 4:00 PM | Mon: Closed
+                Sun: 11:00 AM – 4:00 PM
               </p>
             </div>
             <div>
